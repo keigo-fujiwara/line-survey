@@ -20,11 +20,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 置換処理の区切り文字を @ に変更して確実に置換します
       - name: Replace Environment Variables
         run: |
           sed -i 's@__LIFF_ID__@${{ vars.LIFF_ID }}@g' script.js
           sed -i 's@__GAS_URL__@${{ vars.GAS_URL }}@g' script.js
+
+      # 置換後のscript.jsの冒頭をビルドログに出力して検証する
+      - name: Check Replaced File
+        run: |
+          echo "=== script.js Content ==="
+          head -n 10 script.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
