@@ -1,10 +1,9 @@
-// GitHub Actionsによって実行時に環境変数へ置換されます
-const LIFF_ID = "__LIFF_ID__";
-const GAS_URL = "__GAS_URL__";
+// GitHub Actionsの envsubst によりビルド時に環境変数が注入されます
+const LIFF_ID = "$LIFF_ID";
+const GAS_URL = "$GAS_URL";
 
 let userProfile = null;
 
-// ステータス表示の更新関数
 function updateStatus(msg) {
   const statusEl = document.getElementById("status");
   if (statusEl) {
@@ -12,7 +11,6 @@ function updateStatus(msg) {
   }
 }
 
-// 画面ロード完了時に実行
 window.addEventListener("DOMContentLoaded", () => {
   updateStatus("LINE SDK初期化中...");
 
@@ -43,7 +41,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// 重複回答チェック関数
 function checkAlreadyAnswered(userId) {
   fetch(`${GAS_URL}?userId=${encodeURIComponent(userId)}`)
     .then(res => res.json())
@@ -56,20 +53,17 @@ function checkAlreadyAnswered(userId) {
       }
     })
     .catch(err => {
-      // GAS側チェックエラー時もフォーム入力へ進める救済処理
       console.error("Check Error:", err);
       document.getElementById("status").style.display = "none";
       document.getElementById("consent-step").style.display = "block";
     });
 }
 
-// 同意ボタン押下時
 document.getElementById("start-btn").onclick = function() {
   document.getElementById("consent-step").style.display = "none";
   document.getElementById("survey-form").style.display = "block";
 };
 
-// フォーム送信時
 document.getElementById("survey-form").onsubmit = function(e) {
   e.preventDefault();
   const btn = document.getElementById("submit-btn");
@@ -99,7 +93,6 @@ document.getElementById("survey-form").onsubmit = function(e) {
   });
 };
 
-// エラー表示関数
 function showError(msg) {
   const statusEl = document.getElementById("status");
   if (statusEl) {
