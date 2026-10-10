@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アンケート</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f7f7f7; color: #333; }
+        .card { background: #fff; padding: 20px; border-radius: 10px; max-width: 400px; margin: 0 auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h3 { color: #06C755; text-align: center; margin-top: 0; }
+        .field { margin-bottom: 15px; }
+        label { font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px; }
+        select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #06C755; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        #status { text-align: center; font-size: 14px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>アンケート</h3>
+        <div id="status">読み込み中...</div>
+
+        <form id="form" style="display:none;">
+        <div class="field">
+            <label>満足度を教えてください</label>
+            <select id="satisfaction" required>
+            <option value="">選択してください</option>
+            <option value="5">大変満足</option>
+            <option value="4">満足</option>
+            <option value="3">普通</option>
+            <option value="2">やや不満</option>
+            <option value="1">不満</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>ご意見・ご感想</label>
+            <textarea id="feedback" rows="3"></textarea>
+        </div>
+
+        <button type="submit" id="btn">送信する</button>
+        </form>
+    </div>
+
+    <script>
+        const LIFF_ID = "2011958320-hJrGn9uJ";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxqk9G0vSO8p0Df4gIHbWfWnhMHZP0UMGnYXCCuwjaFBwFtgkNnu0eCR2mGJAVEaxB3/exec"; // ★GASの/exec URLを貼り付け
+
+        let userProfile = null;
+
+        window.onload = function() {
+        liff.init({ liffId: LIFF_ID })
+            .then(() => {
+            if (!liff.isLoggedIn()) {
+                liff.login();
+            } else {
+                return liff.getProfile();
+            }
+            })
+            .then(profile => {
+            if (profile) {
+                userProfile = profile;
+                document.getElementById("status").style.display = "none";
+                document.getElementById("form").style.display = "block";
+            }
+            })
+            .catch(err => {
+            document.getElementById("status").innerText = "エラー: " + err;
+            });
+        };
+
+        document.getElementById("form").onsubmit = function(e) {
+        e.preventDefault();
+        const btn = document.getElementById("btn");
+        btn.disabled = true;
+        btn.innerText = "送信中...";
+
+        const data = {
+            userId: userProfile ? userProfile.userId : "不明",
+            displayName: userProfile ? userProfile.displayName : "不明",
+            satisfaction: document.getElementById("satisfaction").value,
+            feedback: document.getElementById("feedback").value
+        };
+
+        fetch(GAS_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            alert("回答ありがとうございました！");
+            liff.closeWindow();
+        })
+        .catch(err => {
+            alert("エラーが発生しました: " + err);
+            btn.disabled = false;
+            btn.innerText = "送信する";
+        });
+        };
+    </script>
+</body>
+</html>
