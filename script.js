@@ -2,8 +2,6 @@
 const LIFF_ID = "$LIFF_ID";
 const GAS_URL = "$GAS_URL";
 
-let userProfile = null;
-
 function updateStatus(msg) {
   const statusEl = document.getElementById("status");
   if (statusEl) {
@@ -21,43 +19,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
   liff.init({ liffId: LIFF_ID })
     .then(() => {
-      updateStatus("ログイン状態確認中...");
       if (!liff.isLoggedIn()) {
-        updateStatus("LINEログイン実行中...");
         liff.login();
-      } else {
-        return liff.getProfile();
+        return;
       }
-    })
-    .then(profile => {
-      if (profile) {
-        userProfile = profile;
-        updateStatus("重複回答チェック中...");
-        checkAlreadyAnswered(userProfile.userId);
-      }
-    })
-    .catch(err => {
-      showError(`初期化エラー: ${err.message || err}\n(LIFF ID: ${LIFF_ID})`);
-    });
-});
-
-function checkAlreadyAnswered(userId) {
-  fetch(`${GAS_URL}?userId=${encodeURIComponent(userId)}`)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("status").style.display = "none";
-      if (data && data.answered) {
-        showError("すでに回答済みです。ご協力ありがとうございました！");
-      } else {
-        document.getElementById("consent-step").style.display = "block";
-      }
-    })
-    .catch(err => {
-      console.error("Check Error:", err);
       document.getElementById("status").style.display = "none";
       document.getElementById("consent-step").style.display = "block";
+    })
+    .catch(err => {
+      showError(`初期化エラー: ${err.message || err}`);
     });
-}
+});
 
 document.getElementById("start-btn").onclick = function() {
   document.getElementById("consent-step").style.display = "none";
@@ -71,7 +43,6 @@ document.getElementById("survey-form").onsubmit = function(e) {
   btn.innerText = "送信中...";
 
   const payload = {
-    userId: userProfile ? userProfile.userId : "不明",
     satisfaction: document.getElementById("satisfaction").value,
     feedback: document.getElementById("feedback").value
   };
