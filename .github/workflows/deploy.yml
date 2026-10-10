@@ -11,6 +11,11 @@ permissions:
 
 jobs:
   deploy:
+    # ⬇️ ここに environment 設定（github-pages とそのURL）を追加します
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
