@@ -97,15 +97,20 @@ document.getElementById("survey-form").onsubmit = function(e) {
     document.getElementById("status").style.display = "none";
     document.getElementById("survey-form").style.display = "none";
     document.getElementById("done-step").style.display = "block";
-    setTimeout(() => {
-      if (liff.isInClient()) liff.closeWindow();
-    }, 2000);
   })
   .catch(() => {
     showError("送信できませんでした。もう一度お試しください。");
     btn.disabled = false;
     btn.innerText = "送信する";
   });
+};
+
+document.getElementById("back-btn").onclick = function() {
+  if (typeof liff !== "undefined" && liff.isInClient && liff.isInClient()) {
+    liff.closeWindow();
+    return;
+  }
+  history.back();
 };
 
 function showError(msg) {
