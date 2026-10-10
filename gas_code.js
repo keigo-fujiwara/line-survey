@@ -1,5 +1,5 @@
 // データ保存処理（POST）
-// 保存する列: 送信日時, 満足度, ご意見/感想
+// 保存する列: 送信日時, 学年, 性別, イベントの感想, 良かった点, その他のメッセージ, 今後参加したいイベント
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
@@ -7,8 +7,12 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
+      data.grade,
+      data.gender,
       data.satisfaction,
-      data.feedback
+      data.highlight,
+      data.message,
+      data.future
     ]);
 
     return ContentService.createTextOutput(JSON.stringify({ status: "success" }))

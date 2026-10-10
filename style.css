@@ -54,15 +54,58 @@ h2 {
   margin-bottom: 20px;
 }
 
-.field {
-  margin-bottom: 18px;
+.progress {
+  margin: 0 0 8px;
+  text-align: center;
+  color: #06C755;
+  font-size: 13px;
+  font-weight: bold;
 }
 
-label {
+.question {
+  margin: 0 0 18px;
+  font-size: 18px;
   font-weight: bold;
-  font-size: 14px;
+  line-height: 1.5;
+  color: #222;
+}
+
+.step {
+  display: none;
+}
+
+.step.is-active {
   display: block;
-  margin-bottom: 6px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.choice input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #06C755;
+  flex-shrink: 0;
+}
+
+.choice.is-selected {
+  border-color: #06C755;
+  background: #f3fff6;
+}
+
+.step textarea {
+  margin-bottom: 16px;
 }
 
 select, textarea {
