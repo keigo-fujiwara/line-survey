@@ -9,29 +9,23 @@ permissions:
   pages: write
   id-token: write
 
+# 同時デプロイの競合を防ぐ設定
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # gettextパッケージ（envsubstコマンド）を準備
-      - name: Install envsubst
-        run: sudo apt-get update && sudo apt-get install -y gettext-base
-
-      # script.js 内の $LIFF_ID と $GAS_URL を GitHub Variables の値で置換
-      - name: Substitute Environment Variables
-        env:
-          LIFF_ID: ${{ vars.LIFF_ID }}
-          GAS_URL: ${{ vars.GAS_URL }}
+      # リポジトリのVariables（vars.LIFF_ID / vars.GAS_URL）を取得して置換
+      - name: Replace Environment Variables
         run: |
-          envsubst '$LIFF_ID $GAS_URL' < script.js > script.js.tmp
-          mv script.js.tmp script.js
+          sed -i 's@\$LIFF_ID@${{ vars.LIFF_ID }}@g' script.js
+          sed -i 's@\$GAS_URL@${{ vars.GAS_URL }}@g' script.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
