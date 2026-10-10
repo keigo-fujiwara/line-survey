@@ -16,11 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # GitHubのVariablesの値をindex.html内の文字と置き換えるステップ
+      # script.js 内のプレースホルダーをGitHubのVariablesの値に置換
       - name: Replace Environment Variables
         run: |
-          sed -i 's|__LIFF_ID__|${{ vars.LIFF_ID }}|g' index.html
-          sed -i 's|__GAS_URL__|${{ vars.GAS_URL }}|g' index.html
+          sed -i 's|__LIFF_ID__|${{ vars.LIFF_ID }}|g' script.js
+          sed -i 's|__GAS_URL__|${{ vars.GAS_URL }}|g' script.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
