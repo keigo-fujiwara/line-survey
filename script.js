@@ -94,11 +94,12 @@ document.getElementById("survey-form").onsubmit = function(e) {
     body: JSON.stringify(payload)
   })
   .then(() => {
-    alert("回答ありがとうございました！");
+    document.getElementById("survey-form").style.display = "none";
+    document.getElementById("done-step").style.display = "block";
     liff.closeWindow();
   })
-  .catch(err => {
-    alert("送信エラーが発生しました: " + err);
+  .catch(() => {
+    showError("送信できませんでした。もう一度お試しください。");
     btn.disabled = false;
     btn.innerText = "送信する";
   });
