@@ -90,13 +90,16 @@ document.getElementById("survey-form").onsubmit = function(e) {
   fetch(GAS_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload)
   })
   .then(() => {
+    document.getElementById("status").style.display = "none";
     document.getElementById("survey-form").style.display = "none";
     document.getElementById("done-step").style.display = "block";
-    liff.closeWindow();
+    setTimeout(() => {
+      if (liff.isInClient()) liff.closeWindow();
+    }, 2000);
   })
   .catch(() => {
     showError("送信できませんでした。もう一度お試しください。");
