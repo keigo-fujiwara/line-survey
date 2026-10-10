@@ -20,16 +20,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 環境変数を明示的に渡して置換を実行
       - name: Replace Environment Variables
+        env:
+          LIFF_ID_VAL: ${{ vars.LIFF_ID }}
+          GAS_URL_VAL: ${{ vars.GAS_URL }}
         run: |
-          sed -i 's@__LIFF_ID__@${{ vars.LIFF_ID }}@g' script.js
-          sed -i 's@__GAS_URL__@${{ vars.GAS_URL }}@g' script.js
+          sed -i "s@__LIFF_ID__@${LIFF_ID_VAL}@g" script.js
+          sed -i "s@__GAS_URL__@${GAS_URL_VAL}@g" script.js
 
-      # 置換後のscript.jsの冒頭をビルドログに出力して検証する
-      - name: Check Replaced File
+      # 置換結果をログに出力して確認
+      - name: Verify Replacement
         run: |
-          echo "=== script.js Content ==="
-          head -n 10 script.js
+          echo "=== script.js Check ==="
+          head -n 5 script.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
