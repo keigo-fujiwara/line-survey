@@ -19,6 +19,9 @@ function saveAnswer(data) {
   var lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
+    // ID列（2行目以降）が日付形式のままだと番号が日付に変換されるため、数値形式にそろえる
+    sheet.getRange("A2:A").setNumberFormat("0");
+
     // 最終行のID + 1（見出し行のみ・データなしの場合は 1 から開始）
     var lastRow = sheet.getLastRow();
     var lastId = lastRow > 0 ? sheet.getRange(lastRow, 1).getValue() : 0;
