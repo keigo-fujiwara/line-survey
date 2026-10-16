@@ -30,9 +30,10 @@
       <section class="step" data-step="1" data-required="true">
         <p class="progress">1 / 6</p>
         <p class="question">お子様の学年を教えてください。</p>
+        <label class="choice"><input type="radio" name="grade" value="小学２年生">小学２年生</label>
+        <label class="choice"><input type="radio" name="grade" value="小学３年生">小学３年生</label>
         <label class="choice"><input type="radio" name="grade" value="小学４年生">小学４年生</label>
         <label class="choice"><input type="radio" name="grade" value="小学５年生">小学５年生</label>
-        <label class="choice"><input type="radio" name="grade" value="小学６年生">小学６年生</label>
         <button type="button" class="next-btn" disabled>次へ進む</button>
       </section>
 
@@ -74,9 +75,21 @@
         <p class="progress">6 / 6</p>
         <p class="question">今後、参加してみたいイベントやテーマがあれば教えてください。</p>
         <textarea name="future" rows="4" placeholder="ご自由にご記入ください"></textarea>
-        <button type="submit" id="submit-btn">送信する</button>
+        <button type="button" class="next-btn">確認画面へ進む</button>
+      </section>
+
+      <section class="step" data-step="7">
+        <p class="progress">回答内容の確認</p>
+        <p class="confirm-lead">以下の内容で送信します。修正したい項目があればタップしてください。</p>
+        <div id="confirm-list"></div>
+        <button type="submit" id="submit-btn">回答を送信する</button>
       </section>
     </form>
+
+    <div id="sending-step" style="display:none;">
+      <div class="spinner"></div>
+      <p class="sending-text">送信中<span id="sending-dots" class="sending-dots">.</span></p>
+    </div>
 
     <div id="done-step" style="display:none;">
       <h2>送信完了</h2>
