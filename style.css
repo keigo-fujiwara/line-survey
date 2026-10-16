@@ -1,5 +1,6 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
   padding: 20px;
   background: #f7f7f7;
   color: #333;
@@ -46,15 +47,8 @@ h2 {
 }
 
 .done-text {
-  margin: 0 0 12px;
+  margin: 0 0 20px;
   text-align: center;
-}
-
-.close-text {
-  margin: 12px 0 0;
-  text-align: center;
-  font-size: 13px;
-  color: #777;
 }
 
 .notice-text {
@@ -219,7 +213,8 @@ select, textarea {
   border: 1px solid #ddd;
   border-radius: 8px;
   box-sizing: border-box;
-  font-size: 15px;
+  /* 16px未満だとiPhoneで入力時に画面が拡大され、そのまま表示がずれるため */
+  font-size: 16px;
 }
 
 button {

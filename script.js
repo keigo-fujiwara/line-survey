@@ -163,12 +163,8 @@ document.getElementById("survey-form").onsubmit = function(e) {
   });
 };
 
-// LIFFを使わないため確実に閉じる手段はない。閉じられなければ前のページに戻る
 document.getElementById("back-btn").onclick = function() {
   window.close();
-  setTimeout(() => {
-    if (history.length > 1) history.back();
-  }, 300);
 };
 
 function showError(msg) {
