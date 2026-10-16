@@ -109,7 +109,8 @@ document.getElementById("start-btn").onclick = function() {
 };
 
 // 日時を日本時間で「2026年12月6日 11:30」の形にする（端末のタイムゾーンに左右されない）
-function formatJst(date, withYear) {
+// withTime が false なら「2026年12月6日」まで
+function formatJst(date, withYear, withTime = true) {
   const parts = {};
   new Intl.DateTimeFormat("ja-JP", {
     timeZone: "Asia/Tokyo",
@@ -123,11 +124,12 @@ function formatJst(date, withYear) {
     parts[part.type] = part.value;
   });
   const year = withYear ? `${parts.year}年` : "";
-  return `${year}${Number(parts.month)}月${Number(parts.day)}日 ${parts.hour}:${parts.minute}`;
+  const time = withTime ? ` ${parts.hour}:${parts.minute}` : "";
+  return `${year}${Number(parts.month)}月${Number(parts.day)}日${time}`;
 }
 
-// 実施期間（終了が開始と同じ年なら、終了側の年は省略する）
-const PERIOD_TEXT = `${formatJst(PERIOD_START, true)} 〜 ${formatJst(PERIOD_END, PERIOD_START.getFullYear() !== PERIOD_END.getFullYear())}`;
+// 実施期間は日付のみ（終了が開始と同じ年なら、終了側の年は省略する）
+const PERIOD_TEXT = `${formatJst(PERIOD_START, true, false)} 〜 ${formatJst(PERIOD_END, PERIOD_START.getFullYear() !== PERIOD_END.getFullYear(), false)}`;
 document.getElementById("period-text").innerText = PERIOD_TEXT;
 
 // 回答できない状態なら、その理由を表示する（回答できる場合は null）
