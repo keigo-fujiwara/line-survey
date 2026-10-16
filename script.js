@@ -163,8 +163,11 @@ document.getElementById("survey-form").onsubmit = function(e) {
   });
 };
 
+// LINEの中のブラウザは window.close() で閉じられないため、公式アカウントのトーク画面を開く
+const LINE_CHAT_URL = "https://line.me/R/oaMessage/%40684dmirn/";
+
 document.getElementById("back-btn").onclick = function() {
-  window.close();
+  location.href = LINE_CHAT_URL;
 };
 
 function showError(msg) {
