@@ -11,21 +11,21 @@ function doPost(e) {
   }
 }
 
-// 保存する列: 回答番号, 学年, 性別, イベントの感想, 良かった点, その他のメッセージ, 今後参加したいイベント, 送信日時
+// 保存する列: ID, 学年, 性別, イベントの感想, 良かった点, その他のメッセージ, 今後参加したいイベント, 送信日時
 function saveAnswer(data) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
-  // 同時送信で回答番号が重複しないようにロックする
+  // 同時送信でIDが重複しないようにロックする
   var lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    // 最終行の回答番号 + 1（見出し行のみ・データなしの場合は 1 から開始）
+    // 最終行のID + 1（見出し行のみ・データなしの場合は 1 から開始）
     var lastRow = sheet.getLastRow();
-    var lastNumber = lastRow > 0 ? sheet.getRange(lastRow, 1).getValue() : 0;
-    var answerNumber = typeof lastNumber === "number" ? lastNumber + 1 : 1;
+    var lastId = lastRow > 0 ? sheet.getRange(lastRow, 1).getValue() : 0;
+    var id = typeof lastId === "number" ? lastId + 1 : 1;
 
     sheet.appendRow([
-      answerNumber,
+      id,
       data.grade,
       data.gender,
       data.satisfaction,

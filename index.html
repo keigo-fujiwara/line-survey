@@ -86,15 +86,18 @@
       </section>
     </form>
 
-    <div id="sending-step" style="display:none;">
-      <div class="spinner"></div>
-      <p class="sending-text">送信中<span id="sending-dots" class="sending-dots">.</span></p>
-    </div>
 
     <div id="done-step" style="display:none;">
       <h2>送信完了</h2>
       <p class="done-text">回答ありがとうございました。</p>
-      <p class="close-text">画面左上の「×」でこの画面を閉じてください。</p>
+      <p class="close-text">画面上部の「×」でこの画面を閉じてください。</p>
+    </div>
+  </div>
+
+  <div id="sending-overlay" class="overlay" style="display:none;">
+    <div class="modal">
+      <div class="spinner"></div>
+      <p class="sending-text">送信中<span id="sending-dots" class="sending-dots">.</span></p>
     </div>
   </div>
 

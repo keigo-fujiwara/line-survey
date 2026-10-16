@@ -107,14 +107,13 @@ function startSending() {
   }, 400);
 
   document.getElementById("status").style.display = "none";
-  document.getElementById("survey-form").style.display = "none";
-  document.getElementById("sending-step").style.display = "block";
+  document.getElementById("sending-overlay").style.display = "flex";
 }
 
 function stopSending() {
   clearInterval(sendingTimer);
   sendingTimer = null;
-  document.getElementById("sending-step").style.display = "none";
+  document.getElementById("sending-overlay").style.display = "none";
 }
 
 document.getElementById("survey-form").onsubmit = function(e) {
@@ -152,13 +151,14 @@ document.getElementById("survey-form").onsubmit = function(e) {
   })
   .then(() => {
     stopSending();
+    document.getElementById("survey-form").style.display = "none";
     document.getElementById("done-step").style.display = "block";
+    window.scrollTo(0, 0);
   })
   .catch(() => {
     stopSending();
-    document.getElementById("survey-form").style.display = "block";
-    showSurveyStep(CONFIRM_STEP);
     showError("送信できませんでした。もう一度お試しください。");
+    window.scrollTo(0, 0);
     btn.disabled = false;
   });
 };
