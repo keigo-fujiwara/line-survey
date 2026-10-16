@@ -4,8 +4,8 @@ const GAS_URL = "$GAS_URL";
 // ===== 本番前に切り替える設定（true / false を変えてプッシュするだけ） =====
 
 // 受付期間の制限（true: 期間外は回答できない / false: いつでも回答できる）
-const ENABLE_PERIOD = true;
-const PERIOD_START = new Date("2026-11-06T11:30:00+09:00");
+const ENABLE_PERIOD = false;
+const PERIOD_START = new Date("2026-12-06T11:30:00+09:00");
 const PERIOD_END = new Date("2026-12-07T23:59:59+09:00");
 
 // 重複回答の防止（true: 同じ端末からは1回まで / false: 何回でも回答できる）
