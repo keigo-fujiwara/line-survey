@@ -46,8 +46,15 @@ h2 {
 }
 
 .done-text {
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   text-align: center;
+}
+
+.close-text {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: #777;
 }
 
 .notice-text {

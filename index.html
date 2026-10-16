@@ -4,15 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>アンケート</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <meta http-equiv="Cache-Control" content="no-cache">
   <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <div class="card">
-    <div id="status">読み込み中...</div>
+    <div id="status" style="display:none;"></div>
 
-    <div id="consent-step" style="display:none;">
+    <div id="consent-step">
       <h2 id="survey-title">イベントアンケート</h2>
 
       <div class="meta-box">
@@ -82,7 +81,7 @@
     <div id="done-step" style="display:none;">
       <h2>送信完了</h2>
       <p class="done-text">回答ありがとうございました。</p>
-      <button type="button" id="back-btn">戻る</button>
+      <p class="close-text">画面左上の「×」でこの画面を閉じてください。</p>
     </div>
   </div>
 
