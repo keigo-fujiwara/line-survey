@@ -15,7 +15,7 @@
       <h2 id="survey-title">イベントアンケート</h2>
 
       <div class="meta-box">
-        <div class="meta-item"><span class="meta-label">実施期間：</span>2026年12月6日 〜 7日</div>
+        <div class="meta-item"><span class="meta-label">実施期間：</span><span id="period-text"></span></div>
         <div class="meta-item"><span class="meta-label">概要：</span>本日のイベントについてのご感想をお聞かせください。</div>
       </div>
 
@@ -89,7 +89,13 @@
     <div id="done-step" style="display:none;">
       <h2>送信完了</h2>
       <p class="done-text">回答ありがとうございました。</p>
-      <button type="button" id="back-btn">戻る</button>
+      <button type="button" class="back-btn">戻る</button>
+    </div>
+
+    <div id="closed-step" style="display:none;">
+      <h2 id="closed-title"></h2>
+      <p id="closed-text" class="done-text"></p>
+      <button type="button" class="back-btn">戻る</button>
     </div>
   </div>
 

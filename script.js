@@ -1,6 +1,20 @@
 // GitHub Actionsの envsubst によりビルド時に環境変数が注入されます
 const GAS_URL = "$GAS_URL";
 
+// ===== 本番前に切り替える設定（true / false を変えてプッシュするだけ） =====
+
+// 受付期間の制限（true: 期間外は回答できない / false: いつでも回答できる）
+const ENABLE_PERIOD = false;
+const PERIOD_START = new Date("2026-12-06T11:30:00+09:00");
+const PERIOD_END = new Date("2026-12-07T23:59:59+09:00");
+
+// 重複回答の防止（true: 同じ端末からは1回まで / false: 何回でも回答できる）
+const ENABLE_DUPLICATE_CHECK = true;
+// 回答済みの記録名。変えると、それまでの回答済み記録がリセットされる
+const ANSWERED_KEY = "survey-answered-202612";
+
+// =====================================================================
+
 const CONFIRM_STEP = 7;
 
 // 確認画面に表示する項目（step はタップしたときに戻る設問）
@@ -94,6 +108,76 @@ document.getElementById("start-btn").onclick = function() {
   showSurveyStep(1);
 };
 
+// 日時を日本時間で「2026年12月6日 11:30」の形にする（端末のタイムゾーンに左右されない）
+function formatJst(date, withYear) {
+  const parts = {};
+  new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(date).forEach(part => {
+    parts[part.type] = part.value;
+  });
+  const year = withYear ? `${parts.year}年` : "";
+  return `${year}${Number(parts.month)}月${Number(parts.day)}日 ${parts.hour}:${parts.minute}`;
+}
+
+// 実施期間（終了が開始と同じ年なら、終了側の年は省略する）
+const PERIOD_TEXT = `${formatJst(PERIOD_START, true)} 〜 ${formatJst(PERIOD_END, PERIOD_START.getFullYear() !== PERIOD_END.getFullYear())}`;
+document.getElementById("period-text").innerText = PERIOD_TEXT;
+
+// 回答できない状態なら、その理由を表示する（回答できる場合は null）
+function getClosedReason() {
+  if (ENABLE_PERIOD) {
+    const now = new Date();
+    if (now < PERIOD_START) {
+      return { title: "受付開始前です", text: `アンケートは${formatJst(PERIOD_START, true)}から受け付けます。` };
+    }
+    if (now > PERIOD_END) {
+      return { title: "受付終了", text: "アンケート受付期間は終了しました。ご協力誠にありがとうございます。" };
+    }
+  }
+  if (ENABLE_DUPLICATE_CHECK && hasAnswered()) {
+    return { title: "回答済みです", text: "このアンケートにはすでにご回答いただいています。ご協力誠にありがとうございます。" };
+  }
+  return null;
+}
+
+function showClosed(reason) {
+  document.getElementById("status").style.display = "none";
+  document.getElementById("consent-step").style.display = "none";
+  document.getElementById("survey-form").style.display = "none";
+  document.getElementById("closed-title").innerText = reason.title;
+  document.getElementById("closed-text").innerText = reason.text;
+  document.getElementById("closed-step").style.display = "block";
+  window.scrollTo(0, 0);
+}
+
+// 回答済みの記録は端末のブラウザに保存する（使えない環境では記録しない）
+function hasAnswered() {
+  try {
+    return localStorage.getItem(ANSWERED_KEY) === "1";
+  } catch (e) {
+    return false;
+  }
+}
+
+function markAnswered() {
+  if (!ENABLE_DUPLICATE_CHECK) return;
+  try {
+    localStorage.setItem(ANSWERED_KEY, "1");
+  } catch (e) {
+    // 保存できない環境では重複防止をあきらめる
+  }
+}
+
+const closedReason = getClosedReason();
+if (closedReason) showClosed(closedReason);
+
 // 「送信中.」→「送信中..」→「送信中...」→「送信中.」と繰り返す
 let sendingTimer = null;
 
@@ -129,6 +213,13 @@ document.getElementById("survey-form").onsubmit = function(e) {
     return;
   }
 
+  // 回答中に受付終了時刻を過ぎた場合や、別の画面で回答済みの場合は送信しない
+  const reason = getClosedReason();
+  if (reason) {
+    showClosed(reason);
+    return;
+  }
+
   const btn = document.getElementById("submit-btn");
   btn.disabled = true;
 
@@ -151,6 +242,7 @@ document.getElementById("survey-form").onsubmit = function(e) {
   })
   .then(() => {
     stopSending();
+    markAnswered();
     document.getElementById("survey-form").style.display = "none";
     document.getElementById("done-step").style.display = "block";
     window.scrollTo(0, 0);
@@ -167,9 +259,11 @@ document.getElementById("survey-form").onsubmit = function(e) {
 // （oaMessage だとメッセージ入力状態になるため、ti/p を使う）
 const LINE_CHAT_URL = "https://line.me/R/ti/p/%40684dmirn";
 
-document.getElementById("back-btn").onclick = function() {
-  location.href = LINE_CHAT_URL;
-};
+document.querySelectorAll(".back-btn").forEach(btn => {
+  btn.onclick = function() {
+    location.href = LINE_CHAT_URL;
+  };
+});
 
 function showError(msg) {
   const statusEl = document.getElementById("status");
