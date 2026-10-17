@@ -26,6 +26,15 @@ jobs:
       - name: Install envsubst
         run: sudo apt-get update && sudo apt-get install -y gettext-base
 
+      - name: Check switch settings
+        run: |
+          # ENABLE_ の設定値が小文字の true / false 以外ならデプロイを止める
+          if grep -E '^const ENABLE_[A-Z_]+ = ' script.js | grep -vE '= (true|false);'; then
+            echo "script.js の ENABLE_ の値は小文字の true / false で書いてください"
+            exit 1
+          fi
+          node --check script.js
+
       - name: Inject GAS URL
         env:
           GAS_URL: ${{ vars.GAS_URL }}
