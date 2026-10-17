@@ -12,7 +12,7 @@ const PERIOD_END = new Date("2026-12-07T23:59:59+09:00");
 // 重複回答の防止（true: 同じ端末からは1回まで / false: 何回でも回答できる）
 const ENABLE_DUPLICATE_CHECK = true;
 // 回答済みの記録名。変えると、それまでの回答済み記録がリセットされる
-const ANSWERED_KEY = "survey-answered-202612";
+const ANSWERED_KEY = "survey-answered-202612test";
 
 // =====================================================================
 
